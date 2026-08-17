@@ -1,11 +1,7 @@
 from http import HTTPStatus
 
-from fastapi.testclient import TestClient
 
-from fastapi_zero.app import app
-
-
-def test_root_deve_retornar_ola_mundo():
+def test_root_deve_retornar_ola_mundo(client):
     """
     Esse teste tem 3 etapas (AAA)
     - A: Arrange - arranjo
@@ -13,7 +9,7 @@ def test_root_deve_retornar_ola_mundo():
     - A: Assert  - garante que A é A
     """
     # arrange
-    client = TestClient(app)
+
     # Act
     response = client.get('/')
     # Assert
@@ -21,8 +17,7 @@ def test_root_deve_retornar_ola_mundo():
     assert response.status_code == HTTPStatus.OK
 
 
-def test_ola_deve_retornar_ola_mundo_em_html():
-    client = TestClient(app)
+def test_ola_deve_retornar_ola_mundo_em_html(client):
 
     response = client.get('/Ola')
 
@@ -30,8 +25,7 @@ def test_ola_deve_retornar_ola_mundo_em_html():
     assert response.status_code == HTTPStatus.OK
 
 
-def test_treino_de_fastapi_dunossauro():
-    client = TestClient(app)
+def test_treino_de_fastapi_dunossauro(client):
 
     response = client.get('/sobre')
 
@@ -39,8 +33,7 @@ def test_treino_de_fastapi_dunossauro():
     assert response.status_code == HTTPStatus.OK
 
 
-def test_titulo_deve_retornar_titulo_html():
-    client = TestClient(app)
+def test_titulo_deve_retornar_titulo_html(client):
 
     response = client.get('/titulo')
 
@@ -48,10 +41,28 @@ def test_titulo_deve_retornar_titulo_html():
     assert response.status_code == HTTPStatus.OK
 
 
-def test_deve_checar_dois_campos():
-    client = TestClient(app)
+def test_deve_checar_dois_campos(client):
 
     response = client.get('/info')
 
     assert response.json() == {'nome': 'AgnesAPI', 'versao': '1.0'}
     assert response.status_code == HTTPStatus.OK
+
+
+def test_create_user(client):
+
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'alice',
+            'email': 'alice@example.com',
+            'password': 'secret',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.CREATED
+    assert response.json() == {
+        'id': 1,
+        'email': 'alice@example.com',
+        'username': 'alice',
+    }

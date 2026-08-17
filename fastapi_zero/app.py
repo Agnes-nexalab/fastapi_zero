@@ -3,9 +3,11 @@ from http import HTTPStatus
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
-from fastapi_zero.schemas import Message, Sobre
+from fastapi_zero.schemas import Message, Sobre, UserDB, UserPublic, UserSchema
 
 app = FastAPI(title='AgnesAPI')
+
+database = []
 
 
 @app.get('/', status_code=HTTPStatus.OK, response_model=Message)
@@ -31,3 +33,12 @@ def read_titulo():
 @app.get('/info', response_model=Sobre)
 def read_esquema():
     return {'nome': 'AgnesAPI', 'versao': '1.0'}
+
+
+@app.post('/users/', status_code=HTTPStatus.CREATED, response_model=UserPublic)
+def create_user(user: UserSchema):
+    user_with_id = UserDB(**user.model_dump(), id=len(database) + 1)
+
+    database.append(user_with_id)
+
+    return user_with_id
