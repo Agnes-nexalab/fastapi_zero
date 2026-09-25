@@ -100,3 +100,24 @@ def test_delete_user(client):
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {'message': 'User deleted'}
+
+
+def test_update_user_nao_encontrado(client):
+    response = client.put(
+        '/users/3',
+        json={
+            'username': 'Agnes',
+            'email': 'agnes01@gmail.com',
+            'password': '123',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'User not found'}
+
+
+def test_delete_user_nao_encontrado(client):
+    response = client.delete('/users/3465')
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'User not found'}
