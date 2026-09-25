@@ -24,3 +24,13 @@ class UserPublic(BaseModel):
 
 class UserDB(UserSchema):
     id: int
+
+
+class UserList(BaseModel):
+    users: list[UserPublic]
+
+
+class UserSchema(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
